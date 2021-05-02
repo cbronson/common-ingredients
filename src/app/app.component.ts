@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
   getProductFromForm(): Product {
     return {
       name: this.addProductForm.get('name')?.value.toLowerCase(),
-      ingredients: this.parseIngredients(this.addProductForm.get('ingredients')?.value.toLowerCase() || '')
+      ingredients: this.parseIngredients(this.addProductForm.get('ingredients')?.value || '')
     }
   }
 

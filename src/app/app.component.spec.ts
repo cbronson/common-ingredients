@@ -20,16 +20,52 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'common-ingredients'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('common-ingredients');
-  });
+  describe('parseIngredients', () => {
+    it('should return an array of ingredients given a string', () => {
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.componentInstance;
+      const input = "i1, i2, i3,i4,  i5"
+      const expectedOutput = ['i1', 'i2', 'i3', 'i4', 'i5']
+      const output = app.parseIngredients(input)
+      expect(output).toEqual(expectedOutput)
+    })
+  })
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('common-ingredients app is running!');
-  });
+  describe('getIngredientOccurrences', () => {
+    it('should return all ingredients and their occurrences', () => {
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.componentInstance;
+
+      const testProducts = [
+        {
+          name: 'product 1',
+          ingredients: ['i1', 'i2', 'i3', 'i4']
+        },
+        {
+          name: 'product 2',
+          ingredients: ['i5']
+        },
+        {
+          name: 'product 3',
+          ingredients: ['i1', 'i3', 'i4']
+        },
+        {
+          name: 'product 4',
+          ingredients: ['i1']
+        },
+      ]
+
+      const expectedIngredientOccurrences = [
+        { name: 'i1', occurrences: 3, products: ['product 1', 'product 3', 'product 4'] },
+        { name: 'i2', occurrences: 1, products: ['product 1'] },
+        { name: 'i3', occurrences: 2, products: ['product 1', 'product 3'] },
+        { name: 'i4', occurrences: 2, products: ['product 1', 'product 3'] },
+        { name: 'i5', occurrences: 1, products: ['product 2'] },
+      ]
+
+      app.products = testProducts
+      const result = app.getIngredientOccurrences()
+      expect(app.ingredientOccurrences).toEqual(expectedIngredientOccurrences)
+    })
+  })
 });

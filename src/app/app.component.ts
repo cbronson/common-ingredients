@@ -40,14 +40,14 @@ export class AppComponent implements OnInit {
 
   getProductFromForm(): Product {
     return {
-      name: this.addProductForm.get('name')?.value,
-      ingredients: this.parseIngredients(this.addProductForm.get('ingredients')?.value || '')
+      name: this.addProductForm.get('name')?.value.toLowerCase(),
+      ingredients: this.parseIngredients(this.addProductForm.get('ingredients')?.value.toLowerCase() || '')
     }
   }
 
   parseIngredients(input: string | string[]): string[] {
     return typeof input == 'string' ?
-    input.split(',').map((s) => s.trim()) : input
+    input.split(',').map((s) => s.trim().toLowerCase()) : input
   }
 
   addProduct(): void {
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
     const product: Product = this.getProductFromForm()
     const products = [...this.products]
 
-    const productIndex = products.findIndex((p) => p.name === product.name)
+    const productIndex = products.findIndex((p) => p.name.toLowerCase() === product.name.toLowerCase())
     if(productIndex < 0) return console.error('Failed to update product!')
     
     products[productIndex] = product
@@ -73,7 +73,7 @@ export class AppComponent implements OnInit {
     const product: Product = this.getProductFromForm()
     const products = [...this.products]
 
-    const productIndex = products.findIndex((p) => p.name === product.name)
+    const productIndex = products.findIndex((p) => p.name.toLowerCase() === product.name.toLowerCase())
     if(productIndex < 0) return console.error('Failed to delete product!')
 
     products.splice(productIndex, 1)
@@ -88,10 +88,10 @@ export class AppComponent implements OnInit {
 
   viewProductInForm(productName: string): void {
     this.setFormMode(FormMode.UPDATING)
-    const product = this.products.find((p) => p.name === productName) as Product
-    this.addProductForm.patchValue({ name: product.name })
+    const product = this.products.find((p) => p.name.toLowerCase() === productName.toLowerCase()) as Product
+    this.addProductForm.patchValue({ name: product.name.toLowerCase() })
     this.addProductForm.patchValue({ ingredients: product.ingredients })
-    this.activeProductName = product.name
+    this.activeProductName = product.name.toLowerCase()
   }
 
   setFormMode(mode: FormMode): void {
@@ -115,21 +115,21 @@ export class AppComponent implements OnInit {
 
     this.products.forEach((p) => {
       p.ingredients.forEach((i)=> {
-        const existsAt = x.findIndex((j: any) => j.name === i)
+        const existsAt = x.findIndex((j: any) => j.name.toLowerCase() === i.toLowerCase())
         if(existsAt >= 0) {
           const curr = x[existsAt]
 
-          const updatedProductList: string[] = curr.products.includes(p) ? curr.products : [...curr.products, p.name]
+          const updatedProductList: string[] = curr.products.includes(p.name.toLowerCase()) ? curr.products : [...curr.products, p.name.toLowerCase()]
           x[existsAt] = {
-            name: curr.name,
+            name: curr.name.toLowerCase(),
             occurrences: curr.occurrences += 1,
             products: updatedProductList
           }
         } else {
           x.push({
-            name: i,
+            name: i.toLowerCase(),
             occurrences: 1,
-            products: [p.name]
+            products: [p.name.toLowerCase()]
           })
         }
       })

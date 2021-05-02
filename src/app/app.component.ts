@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.addProductForm = new FormGroup({
-      name: new FormControl('', [Validators.required, Validators.maxLength(20)]),
+      name: new FormControl('', [Validators.required]),
       ingredients: new FormControl('', [Validators.required])
     })
 
